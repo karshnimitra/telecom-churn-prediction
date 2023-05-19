@@ -6,7 +6,7 @@ imbalanced-learn>=0.10.1
 imblearn>=0.0
 matplotlib>=3.5.2
 matplotlib-inline>=0.1.6
-numpy>=1.21.5
+numpy==1.19.5
 numpy-financial>=1.0.0
 numpydoc>=1.4.0
 pandas>=1.4.4
