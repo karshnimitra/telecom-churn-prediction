@@ -604,26 +604,26 @@ param1 = {}
 param1['classifier__var_smoothing'] = [1e-09, 1e-08, 1e-07]
 param1['classifier'] = [clf1]
 
-param2 = {}
-param2['classifier__C'] = [0.1, 1, 10]
-param2['classifier__penalty'] = [None, 'l2']
-param2['classifier'] = [clf2]
+# param2 = {}
+# param2['classifier__C'] = [0.1, 1, 10]
+# param2['classifier__penalty'] = [None, 'l2']
+# param2['classifier'] = [clf2]
 
 param3 = {}
 param3['classifier__n_neighbors'] = [3, 5, 7]
 param3['classifier__weights'] = ['uniform', 'distance']
 param3['classifier'] = [clf3]
 
-param4={}
-param4['classifier'] = [clf4]
-param4['classifier__C'] = [0.1, 1, 10]
-param4['classifier__kernel'] = ['rbf','sigmoid']
-param4['classifier__gamma'] = [1, 0.1, 0.0001]
+# param4={}
+# param4['classifier'] = [clf4]
+# param4['classifier__C'] = [0.1, 1, 10]
+# param4['classifier__kernel'] = ['rbf','sigmoid']
+# param4['classifier__gamma'] = [1, 0.1, 0.0001]
 
-param5 = {}
-param5['classifier__max_depth'] = [None, 5, 10]
-param5['classifier__n_estimators'] = [50, 100, 200]
-param5['classifier'] = [clf5]
+# param5 = {}
+# param5['classifier__max_depth'] = [None, 5, 10]
+# param5['classifier__n_estimators'] = [50, 100, 200]
+# param5['classifier'] = [clf5]
 
 # param6= {}
 # param6['classifier'] = [clf6]
@@ -677,7 +677,7 @@ pipeline = ImbPipeline(steps=[
     ('classifier', clf1)
 ])
 
-params = [param1, param2, param3, param4, param5]#, param6]
+params = [param1, param3]
 
 st.code('''pipeline = ImbPipeline(steps=[
     ('oversampler', RandomOverSampler()),
