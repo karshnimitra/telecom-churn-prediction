@@ -46,7 +46,8 @@ st.set_page_config(layout="centered",page_title='Churn Analysis and Prediction')
 
 is_local = 'SERVER_PORT' not in os.environ
 
-st.write("Running on local:",is_local) 
+st.write("env:",os.environ)
+st.write("path",os.path) 
 
 
 st.title('Understanding the drivers of Churn in a Telecom Company')
