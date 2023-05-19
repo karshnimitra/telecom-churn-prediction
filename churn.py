@@ -594,7 +594,7 @@ st.markdown("For classifying churn or not churn")
 st.caption("Models to try")
 clf1 = GaussianNB()
 clf2 = LogisticRegression(random_state=seed,max_iter=200)
-# clf3 = KNeighborsClassifier()
+clf3 = KNeighborsClassifier()
 # clf4 = svm.SVC()
 # clf5 = RandomForestClassifier(random_state=seed)
 # clf6 = xgb.XGBClassifier(random_state=seed,eval_metric="auc")
@@ -609,10 +609,10 @@ param2['classifier__C'] = [0.1, 1, 10]
 param2['classifier__penalty'] = [None, 'l2']
 param2['classifier'] = [clf2]
 
-# param3 = {}
-# param3['classifier__n_neighbors'] = [3, 5, 7]
-# param3['classifier__weights'] = ['uniform', 'distance']
-# param3['classifier'] = [clf3]
+param3 = {}
+param3['classifier__n_neighbors'] = [3, 5, 7]
+param3['classifier__weights'] = ['uniform', 'distance']
+param3['classifier'] = [clf3]
 
 # param4={}
 # param4['classifier'] = [clf4]
@@ -677,7 +677,7 @@ pipeline = ImbPipeline(steps=[
     ('classifier', clf1)
 ])
 
-params = [param1, param2]#, param3, param4, param5, param6]
+params = [param1, param2, param3]#, param4, param5, param6]
 
 st.code('''pipeline = ImbPipeline(steps=[
     ('oversampler', RandomOverSampler()),
@@ -733,22 +733,23 @@ st.markdown('''**Figure 20**: From the confusion matrix, we can see that the mod
 
 st.subheader("Best Performing Model Interpretation")
 
-# #Get the OHE columns for explainibility
+#Get the OHE columns for explainibility
 ohe_cols = preprocessor.named_transformers_['categorical_pipeline2'].named_steps['ohe_cat_3class'].get_feature_names_out(categorical_cols_3class)
-# ohe_cols
 
 explainer_cols = numeric_cols + categorical_cols_yn + list(ohe_cols)
 
 explain_df = pd.DataFrame(data = X_test_transformed, columns = explainer_cols)
 explain_df = explain_df.apply(pd.to_numeric)
 
-explainer = shap.TreeExplainer(best_model)
-shap_values = explainer.shap_values(explain_df)
-fig, ax = plt.subplots(figsize=(10,5))
-shap.summary_plot(shap_values,explain_df)
-st.pyplot(plt.gcf(),clear_figure=True)
 
-st.markdown('''**Figure 21**: The summary plot above allows us to identify the features which have high impact on the model prediction. The color bar on the right depicts the
+try:
+    explainer = shap.TreeExplainer(best_model)
+    shap_values = explainer.shap_values(explain_df)
+    fig, ax = plt.subplots(figsize=(10,5))
+    shap.summary_plot(shap_values,explain_df)
+    st.pyplot(plt.gcf(),clear_figure=True)
+
+    st.markdown('''**Figure 21**: The summary plot above allows us to identify the features which have high impact on the model prediction. The color bar on the right depicts the
             actual value of the feature for that observation (row) and the x-axis depicts the impact it has on the output. In this case, a negative impact means this observation
             contributes to the 0 (No Churn) Class.            
             \nFor example, we see that there a significant number of red dots in Number of referrals that have a negative impact on the model output. As we identified before, 
@@ -756,13 +757,8 @@ st.markdown('''**Figure 21**: The summary plot above allows us to identify the f
             \nWe also see a clear distinction in the Month-to-Month contract type where the people with a Month-to-Month contract contribute significantly to the 1 (Churn) Class and the people without, contribute
             significantly to the 0 (No Churn) Class.            
             ''')
-
-# explainer = shap.Explainer(best_model, explain_df)
-# shap_values = explainer(explain_df,check_additivity=False)
-# shap.plots.waterfall(shap_values[0],max_display=20)
-# st.pyplot(plt.gcf())
-
-# plt.clf()
+except:
+     st.markdown("SHAP cannot explain the best performing model.")
 
 st.header("Identifying Probability of churn and determining lost value")
 st.markdown("Now that we identified the churners, we want to estimate the business value of retaining them, i.e. how much are they worth? Is it financially wise to spend money to retain them? If yes, how much?")
