@@ -44,10 +44,11 @@ import os
 
 st.set_page_config(layout="centered",page_title='Churn Analysis and Prediction')
 
-is_local = 'SERVER_PORT' not in os.environ
+def is_running_on_streamlit():
+     return "HOSTNAME" in os.environ and os.environ['HOSTNAME'] == 'streamlit'
 
-st.write("env:",os.environ)
-st.write("path",os.path) 
+
+st.write("STREAMLIT:",is_running_on_streamlit())
 
 
 st.title('Understanding the drivers of Churn in a Telecom Company')
