@@ -424,7 +424,8 @@ st.markdown('''From a high level geospatial analysis, we identify that location 
 st.subheader('Correlation Analysis')
 
 fig, ax = plt.subplots(figsize=(10, 5))
-sns.heatmap(churn_df.corr(numeric_only=True), annot=True,fmt='.1f',linewidth=.5,cmap=sns.color_palette("rocket_r", as_cmap=True))
+# sns.heatmap(churn_df.corr(numeric_only=True), annot=True,fmt='.1f',linewidth=.5,cmap=sns.color_palette("rocket_r", as_cmap=True))
+sns.heatmap(churn_df.select_dtypes(include='number').corr(numeric_only=True), annot=True,fmt='.1f',linewidth=.5,cmap=sns.color_palette("rocket_r", as_cmap=True))
 st.pyplot(fig,clear_figure=True)
 
 st.markdown('''**Figure 19:** The chart above shows correlations between the numeric features. Some of the more obvious ones are Tenure in Months - with Total Charges, Total Revenue and other charges as well.
