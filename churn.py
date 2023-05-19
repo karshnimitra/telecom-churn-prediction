@@ -40,17 +40,13 @@ import shap
 from streamlit_folium import folium_static
 import io
 import joblib
-import socket
-
+import os
 
 st.set_page_config(layout="centered",page_title='Churn Analysis and Prediction')
 
+is_local = 'SERVER_PORT' not in os.environ
 
-def is_running_on_st():
-     return False if socket.gethostname() == 'KMLaptop' or 'localhost' in socket.gethostname() else True
-
-running_on_st = is_running_on_st()
-st.write("Running on Streamit:",running_on_st) 
+st.write("Running on local:",is_local) 
 
 
 st.title('Understanding the drivers of Churn in a Telecom Company')
