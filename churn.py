@@ -598,7 +598,7 @@ clf2 = LogisticRegression(random_state=seed,max_iter=200)
 clf3 = KNeighborsClassifier()
 clf4 = svm.SVC()
 clf5 = RandomForestClassifier(random_state=seed)
-clf6 = xgb.XGBClassifier(random_state=seed,eval_metric="auc")
+# clf6 = xgb.XGBClassifier(random_state=seed,eval_metric="auc")
 
 # Initiaze the hyperparameters for each dictionary
 param1 = {}
@@ -626,10 +626,10 @@ param5['classifier__max_depth'] = [None, 5, 10]
 param5['classifier__n_estimators'] = [50, 100, 200]
 param5['classifier'] = [clf5]
 
-param6= {}
-param6['classifier'] = [clf6]
-param6['classifier__eta'] = [0.05,0.25,0.45]
-param6['classifier__min_child_weight'] = [10,30,50]
+# param6= {}
+# param6['classifier'] = [clf6]
+# param6['classifier__eta'] = [0.05,0.25,0.45]
+# param6['classifier__min_child_weight'] = [10,30,50]
 
 
 st.code('''clf1 = GaussianNB()
@@ -678,7 +678,7 @@ pipeline = ImbPipeline(steps=[
     ('classifier', clf1)
 ])
 
-params = [param1, param2, param3, param4, param5, param6]
+params = [param1, param2, param3, param4, param5]#, param6]
 
 st.code('''pipeline = ImbPipeline(steps=[
     ('oversampler', RandomOverSampler()),
