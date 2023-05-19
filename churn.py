@@ -51,7 +51,13 @@ path = './data'
 
 st.markdown(" ")
 st.markdown("A quick overview of the data")
-churn_df = pd.read_csv(path+'/telecom_customer_churn.csv')
+
+@st.cache_data()
+def get_data():
+    return pd.read_csv(path+'/telecom_customer_churn.csv')
+
+churn_df = get_data()
+
 st.write("Dimensions of the data:",churn_df.shape)
 st.dataframe(churn_df.head().T)
 
@@ -845,10 +851,6 @@ Spending any more would result in losses in the long term.''')
 grouped_val = value_df.groupby(['Tenure in Months','Churn Risk']).agg({'PV': 'mean','Lost Revenue':'count'})
 grouped_val.reset_index(inplace=True)
 grouped_val.columns= ['Tenure in Months','Churn Risk','Mean PV','Count']
-# grouped_val['Total'] = grouped_val.groupby('Tenure in Months')['Count'].transform('sum')
-# grouped_val['Percent'] = grouped_val['Count'] / grouped_val['Total']
-
-# grouped_val.head()
 
 a = alt.Chart(grouped_val).mark_bar().encode(
     x=alt.X('Tenure in Months',bin=alt.Bin(maxbins=100)),
@@ -917,12 +919,6 @@ churn_y_test = churn_X_test['Churn Category']
 # Keep only the needed columns in the churn_X
 churn_X_train = churn_X_train[numeric_cols + categorical_cols_yn + categorical_cols_3class].copy()
 churn_X_test = churn_X_test[numeric_cols + categorical_cols_yn + categorical_cols_3class].copy()''')
-
-
-# # print(churn_X_train.shape)
-# # print(churn_y_train.shape)
-# # print(churn_X_test.shape)
-# # print(churn_y_test.shape)
 
 st.markdown("The new dataset looks like:")
 
@@ -1030,27 +1026,19 @@ st.code('''
 # We predict the probabilities of every churn category for a given churned customer
 churn_y_pred_proba = churn_best_model.predict_proba(churn_X_test_transformed)''')
 
-# getting the probability of the churn reasons across five different churning categories for every churned customers
-
-# print(churn_y_pred[0:5])
-# print(churn_y_pred_proba[0:5])
 
 # adding the probability for the most and the second likely category to each observation
 churn_y_pred_max_proba = [i.max() for i in churn_y_pred_proba]
 churn_y_pred_sec_proba = [i[np.argsort(i)[-2]] for i in churn_y_pred_proba]
 churn_y_pred_sec_category = [np.argsort(i)[-2] if i[np.argsort(i)[-1]] != i[np.argsort(i)[-2]] else np.argsort(i)[-1] for i in churn_y_pred_proba]
-# print(churn_y_pred_max_proba[0:5])
-# print(churn_y_pred_sec_proba[0:5])
-# print(churn_y_pred_sec_category[0:5])
+
 
 churn_X_test['Prob_1'] = churn_y_pred_max_proba
 churn_X_test['Category_1'] = churn_y_pred
 churn_X_test['Prob_2'] = churn_y_pred_sec_proba
 churn_X_test['Category_2'] = churn_y_pred_sec_category
 
-# print(churn_X_test.shape)
 churn_X_test = churn_X_test.reset_index(drop=True)
-# churn_X_test.head().T
 
 d = {0:'Attitude', 1:'Competitor', 2:'Dissatisfaction', 3:'Other', 4:'Price'}
 
@@ -1107,19 +1095,6 @@ st.altair_chart(chart)
 st.markdown('''**Figure 27**: The chart above shows us the number of churners by their secondary reason of predicted churn.
 This chart is a little less skewed, but the second highest reason for churn for most customers is dissatisfaction with the company, which is dissatisfaction with the 
 service, product, network issues etc.''')
-
-# a = alt.Chart(churn_X_test).mark_bar().encode(
-#     x = alt.X('Churn Category_1:N'),
-#     y = alt.Y('count()'),
-#     color = 'Contract:N',
-#     tooltip=alt.Tooltip('count()')
-# ).properties(
-#     width=550,
-#     height=450,
-#     title = 'Number of Different Contracts in each Churning Category'
-# )
-
-# a
 
 a = alt.Chart(churn_X_test).mark_bar().encode(
     x = alt.X('Churn Category_1:N'),
