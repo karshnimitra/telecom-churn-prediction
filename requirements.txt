@@ -1,4 +1,6 @@
-altair==4.1.0
+altair>=4.2.2
+altair-data-server>=0.4.1
+altair-viewer>=0.4.0
 folium>=0.13
 imbalanced-learn==0.10.1
 imblearn==0.0
