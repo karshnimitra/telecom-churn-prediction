@@ -593,7 +593,7 @@ st.markdown("For classifying churn or not churn")
 
 st.caption("Models to try")
 clf1 = GaussianNB()
-# clf2 = LogisticRegression(random_state=seed,max_iter=200)
+clf2 = LogisticRegression(random_state=seed,max_iter=200)
 # clf3 = KNeighborsClassifier()
 # clf4 = svm.SVC()
 # clf5 = RandomForestClassifier(random_state=seed)
@@ -604,10 +604,10 @@ param1 = {}
 param1['classifier__var_smoothing'] = [1e-09, 1e-08, 1e-07]
 param1['classifier'] = [clf1]
 
-# param2 = {}
-# param2['classifier__C'] = [0.1, 1, 10]
-# param2['classifier__penalty'] = [None, 'l2']
-# param2['classifier'] = [clf2]
+param2 = {}
+param2['classifier__C'] = [0.1, 1, 10]
+param2['classifier__penalty'] = [None, 'l2']
+param2['classifier'] = [clf2]
 
 # param3 = {}
 # param3['classifier__n_neighbors'] = [3, 5, 7]
@@ -677,7 +677,7 @@ pipeline = ImbPipeline(steps=[
     ('classifier', clf1)
 ])
 
-params = [param1]#, param2, param3, param4, param5]#, param6]
+params = [param1, param2]#, param3, param4, param5, param6]
 
 st.code('''pipeline = ImbPipeline(steps=[
     ('oversampler', RandomOverSampler()),
