@@ -40,20 +40,16 @@ import shap
 from streamlit_folium import folium_static
 import io
 import joblib
-import socket
+import os
+
 
 st.set_page_config(layout="centered",page_title='Churn Analysis and Prediction')
 
 
+def is_running_on_st():
+    return "STREAMLIT_SERVER_URL" in os.environ
 
-
-def is_running_on_streamlit():
-     if 'streamlit' in st.__version__:
-          return True
-     else:
-          return False
-
-running_on_st = is_running_on_streamlit()
+running_on_st = is_running_on_st()
 st.write("Running on Streamit:",running_on_st) 
 
 
