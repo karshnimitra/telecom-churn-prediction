@@ -375,8 +375,7 @@ The green line charts average monthly revenue per customer. We can see that in s
 This indicates that if the company focuses on retaining customers, they could significantly boost their average monthly revenue.''')
 
 
-def generate_map(temp_df,color):
-      
+def generate_map(temp_df,color):      
       f = folium.Figure(width=1000, height=500)
       map = folium.Map(location=[36.7783,-119.4179], zoom_start=5).add_to(f)
       for idx,row in temp_df.iterrows():
@@ -594,10 +593,10 @@ st.markdown("For classifying churn or not churn")
 
 st.caption("Models to try")
 clf1 = GaussianNB()
-clf2 = LogisticRegression(random_state=seed,max_iter=200)
-clf3 = KNeighborsClassifier()
-clf4 = svm.SVC()
-clf5 = RandomForestClassifier(random_state=seed)
+# clf2 = LogisticRegression(random_state=seed,max_iter=200)
+# clf3 = KNeighborsClassifier()
+# clf4 = svm.SVC()
+# clf5 = RandomForestClassifier(random_state=seed)
 # clf6 = xgb.XGBClassifier(random_state=seed,eval_metric="auc")
 
 # Initiaze the hyperparameters for each dictionary
@@ -678,7 +677,7 @@ pipeline = ImbPipeline(steps=[
     ('classifier', clf1)
 ])
 
-params = [param1, param2, param3, param4, param5]#, param6]
+params = [param1]#, param2, param3, param4, param5]#, param6]
 
 st.code('''pipeline = ImbPipeline(steps=[
     ('oversampler', RandomOverSampler()),
