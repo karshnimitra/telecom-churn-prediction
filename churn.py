@@ -677,7 +677,7 @@ pipeline = ImbPipeline(steps=[
     ('classifier', clf1)
 ])
 
-params = [param6]
+params = [param1,param2,param3,param4,param5,param6]
 
 st.code('''pipeline = ImbPipeline(steps=[
     ('oversampler', RandomOverSampler()),
