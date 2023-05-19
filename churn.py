@@ -704,15 +704,17 @@ st.subheader('Perform GridSearch over all the models and their hyperparameters')
 st.code('''grid_search = GridSearchCV(pipeline, params, cv = 5, n_jobs=-1, scoring='roc_auc',refit=True)
 grid_search.fit(X_train, y_train)''')
 
+@st.cache_resource()
+def perform_binary_grid_search():
+    if is_running_on_streamlit():
+        grid_search=joblib.load('binary_grid_search_model.pkl')
+    else:
+        grid_search = GridSearchCV(pipeline, params, cv = 5, n_jobs=-1, scoring='roc_auc',refit=True)
+        grid_search.fit(X_train, y_train)
+        joblib.dump(grid_search,'binary_grid_search_model.pkl')
+    return grid_search
 
-grid_search=None
-
-if is_running_on_streamlit():
-     grid_search=joblib.load('binary_grid_search_model.pkl')
-else:
-     grid_search = GridSearchCV(pipeline, params, cv = 5, n_jobs=-1, scoring='roc_auc',refit=True)
-     grid_search.fit(X_train, y_train)
-     joblib.dump(grid_search,'binary_grid_search_model.pkl')
+grid_search = perform_binary_grid_search()
 
 st.write("Best hyperparameters:", grid_search.best_params_)
 st.write("Best Validation score:", grid_search.best_score_)
@@ -1007,10 +1009,15 @@ st.code('''grid_search2 = GridSearchCV(pipeline, params, cv = 5, n_jobs=-1, scor
 grid_search2.fit(churn_X_train_resampled, churn_y_train_labelencoded)''')
 st.caption("This grid search also uses similar models and hyperparameters. However, we use 'accuracy' to identify the best model")
 
+
 @st.cache_resource()
 def perform_multilabel_grid_search():
-    grid_search2 = GridSearchCV(pipeline, params, cv = 5, n_jobs=-1, scoring='accuracy',refit=True)
-    grid_search2.fit(churn_X_train_resampled, churn_y_train_labelencoded)
+    if is_running_on_streamlit():
+        grid_search2=joblib.load('multilabel_grid_search_model.pkl')
+    else:
+        grid_search2 = GridSearchCV(pipeline, params, cv = 5, n_jobs=-1, scoring='accuracy',refit=True)
+        grid_search2.fit(churn_X_train_resampled, churn_y_train_labelencoded)
+        joblib.dump(grid_search2,'multilabel_grid_search_model.pkl')
     return grid_search2
 
 grid_search2 = perform_multilabel_grid_search()
@@ -1025,6 +1032,8 @@ churn_X_test_transformed = preprocessor.transform(churn_X_test)
 
 churn_y_pred = churn_best_model.predict(churn_X_test_transformed)
 churn_y_pred_proba = churn_best_model.predict_proba(churn_X_test_transformed)
+
+d = {0:'Attitude', 1:'Competitor', 2:'Dissatisfaction', 3:'Other', 4:'Price'}
 
 st.code('''
 # We predict the probabilities of every churn category for a given churned customer
@@ -1043,8 +1052,6 @@ churn_X_test['Prob_2'] = churn_y_pred_sec_proba
 churn_X_test['Category_2'] = churn_y_pred_sec_category
 
 churn_X_test = churn_X_test.reset_index(drop=True)
-
-d = {0:'Attitude', 1:'Competitor', 2:'Dissatisfaction', 3:'Other', 4:'Price'}
 
 churn_X_test['Churn Category_1'] = churn_X_test['Category_1'].map(d)
 churn_X_test['Churn Category_2'] = churn_X_test['Category_2'].map(d)
