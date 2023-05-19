@@ -47,19 +47,14 @@ st.set_page_config(layout="centered",page_title='Churn Analysis and Prediction')
 
 
 
-def is_running_locally():
-    # Get the hostname of the machine where the code is running
-    hostname = socket.gethostname()
-    
-    # Check if the hostname contains a known server identifier
-    # Modify this condition based on your server naming convention
-    is_server = any(keyword in hostname for keyword in ['server', 'cluster'])
-    
-    # If it's not running on a server, assume it's running locally
-    return not is_server
+def is_running_on_streamlit():
+     if 'streamlit' in st.__version__:
+          return True
+     else:
+          return False
 
-running_on_local = is_running_locally()
-st.write("Running locally:",running_on_local) 
+running_on_st = is_running_on_streamlit()
+st.write("Running on Streamit:",running_on_st) 
 
 
 st.title('Understanding the drivers of Churn in a Telecom Company')
