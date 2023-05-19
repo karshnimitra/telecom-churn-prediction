@@ -47,10 +47,6 @@ st.set_page_config(layout="centered",page_title='Churn Analysis and Prediction')
 def is_running_on_streamlit():
      return "HOSTNAME" in os.environ and os.environ['HOSTNAME'] == 'streamlit'
 
-
-st.write("STREAMLIT:",is_running_on_streamlit())
-
-
 st.title('Understanding the drivers of Churn in a Telecom Company')
 st.markdown('By: [Karshni Mitra](https://www.linkedin.com/in/karshnimitra/) & [Yi-Hsueh Yang](https://www.linkedin.com/in/yi-hsueh-alex-yang/)')
 st.caption('Data Source: https://data.world/mcc450/telecom-churn')
@@ -708,15 +704,15 @@ st.subheader('Perform GridSearch over all the models and their hyperparameters')
 st.code('''grid_search = GridSearchCV(pipeline, params, cv = 5, n_jobs=-1, scoring='roc_auc',refit=True)
 grid_search.fit(X_train, y_train)''')
 
-# st.caption('This may take 5-10 minutes to load')
 
-@st.cache_resource()
-def perform_grid_search():
-    grid_search = GridSearchCV(pipeline, params, cv = 5, n_jobs=-1, scoring='roc_auc',refit=True)
-    grid_search.fit(X_train, y_train)
-    return grid_search
+grid_search=None
 
-grid_search = perform_grid_search()
+if is_running_on_streamlit():
+     grid_search=joblib.load('binary_grid_search_model.pkl')
+else:
+     grid_search = GridSearchCV(pipeline, params, cv = 5, n_jobs=-1, scoring='roc_auc',refit=True)
+     grid_search.fit(X_train, y_train)
+     joblib.dump(grid_search,'binary_grid_search_model.pkl')
 
 st.write("Best hyperparameters:", grid_search.best_params_)
 st.write("Best Validation score:", grid_search.best_score_)
