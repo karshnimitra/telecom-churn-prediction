@@ -753,15 +753,13 @@ explainer_cols = numeric_cols + categorical_cols_yn + list(ohe_cols)
 explain_df = pd.DataFrame(data = X_test_transformed, columns = explainer_cols)
 explain_df = explain_df.apply(pd.to_numeric)
 
+explainer = shap.TreeExplainer(best_model)
+shap_values = explainer.shap_values(explain_df)
+fig, ax = plt.subplots(figsize=(10,5))
+shap.summary_plot(shap_values,explain_df)
+st.pyplot(plt.gcf(),clear_figure=True)
 
-try:
-    explainer = shap.TreeExplainer(best_model)
-    shap_values = explainer.shap_values(explain_df)
-    fig, ax = plt.subplots(figsize=(10,5))
-    shap.summary_plot(shap_values,explain_df)
-    st.pyplot(plt.gcf(),clear_figure=True)
-
-    st.markdown('''**Figure 21**: The summary plot above allows us to identify the features which have high impact on the model prediction. The color bar on the right depicts the
+st.markdown('''**Figure 21**: The summary plot above allows us to identify the features which have high impact on the model prediction. The color bar on the right depicts the
             actual value of the feature for that observation (row) and the x-axis depicts the impact it has on the output. In this case, a negative impact means this observation
             contributes to the 0 (No Churn) Class.            
             \nFor example, we see that there a significant number of red dots in Number of referrals that have a negative impact on the model output. As we identified before, 
@@ -769,8 +767,8 @@ try:
             \nWe also see a clear distinction in the Month-to-Month contract type where the people with a Month-to-Month contract contribute significantly to the 1 (Churn) Class and the people without, contribute
             significantly to the 0 (No Churn) Class.            
             ''')
-except:
-     st.markdown("SHAP cannot explain the best performing model.")
+# except:
+#      st.markdown("SHAP cannot explain the best performing model.")
 
 st.header("Identifying Probability of churn and determining lost value")
 st.markdown("Now that we identified the churners, we want to estimate the business value of retaining them, i.e. how much are they worth? Is it financially wise to spend money to retain them? If yes, how much?")
@@ -895,11 +893,13 @@ churn_X_test = churn_X_test.filter(regex='^(?!.*_right)')
 
 #Keep only rows with churned customers, here we use our prediction
 churn_X_train = churn_X_train[y_train==1]
+# churn_X_test_true = churn_X_test[y_test==1]
 churn_X_test = churn_X_test[y_pred==1]
 
 #Get the y columns, in this case churn category we are trying to predict
 churn_y_train = churn_X_train['Churn Category']
 churn_y_test = churn_X_test['Churn Category']
+# churn_y_test_true = churn_X_test_true['Churn Category'].map()
 
 #Keep only the needed columns in the churn_X
 churn_X_train = churn_X_train[numeric_cols + categorical_cols_yn + categorical_cols_3class].copy()
