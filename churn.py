@@ -894,13 +894,11 @@ churn_X_test = churn_X_test.filter(regex='^(?!.*_right)')
 
 #Keep only rows with churned customers, here we use our prediction
 churn_X_train = churn_X_train[y_train==1]
-# churn_X_test_true = churn_X_test[y_test==1]
 churn_X_test = churn_X_test[y_pred==1]
 
 #Get the y columns, in this case churn category we are trying to predict
 churn_y_train = churn_X_train['Churn Category']
 churn_y_test = churn_X_test['Churn Category']
-# churn_y_test_true = churn_X_test_true['Churn Category'].map()
 
 #Keep only the needed columns in the churn_X
 churn_X_train = churn_X_train[numeric_cols + categorical_cols_yn + categorical_cols_3class].copy()
@@ -1035,6 +1033,7 @@ churn_y_pred = churn_best_model.predict(churn_X_test_transformed)
 churn_y_pred_proba = churn_best_model.predict_proba(churn_X_test_transformed)
 
 d = {0:'Attitude', 1:'Competitor', 2:'Dissatisfaction', 3:'Other', 4:'Price'}
+# e = {v : k for k,v in d.items()}
 
 st.code('''
 # We predict the probabilities of every churn category for a given churned customer
